@@ -7,9 +7,20 @@ terraform {
   }
 }
 
+<<<<<<< HEAD
 provider "aws" {
   region = "us-east-1"
 }
+=======
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'main.tf'
+  schedule:
+    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC as a safety syncd
+>>>>>>> e54e5b7138a40074d839eb974e1ea06b6935ac79
 
 resource "aws_instance" "web_server" {
   ami           = "ami-0b245cc5f82576748"
