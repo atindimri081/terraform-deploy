@@ -1,4 +1,4 @@
-# 1. Settings & Required Providers Block
+# 1. Terraform settings & required providers
 terraform {
   required_providers {
     aws = {
@@ -8,18 +8,18 @@ terraform {
   }
 }
 
-# 2. Provider Configuration Block
+# 2. AWS Provider configuration
 provider "aws" {
   region = "us-east-1"
 }
 
-# 3. Resource Block (Creates the EC2 instance)
+# 3. EC2 Instance Resource block
 resource "aws_instance" "Deploy_instance" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t3.micro"
 
   tags = {
-    Name  = "Deploy_instance" # Capital 'N' displays as the name in AWS Console
+    Name  = "Deploy_instance"
     owner = "atin"
   }
 }
