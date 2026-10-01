@@ -1,38 +1,40 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
+name: Terraform Deployment Workflow
 
-# Terraform automatically uses credentials from `aws configure`
-provider "aws" {
-  region = "us-east-1"
-}
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'main.tf'
+  schedule:
+    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC as a safety sync
 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
 
-# Create a simple ec2 instance
-resource "aws_instance" "my_first_cloud_ec2" {
-  ami           = "ami-0b245cc5f82576748"
-  instance_type = "t3.micro"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
 
-  tags = {
-    Environment = "Dev"
-    ManagedBy   = "Terraform"
-    Bill        = "20000 Rupees/month"
-    Owner       = "Smith"
-  }
-}
-output "ec2_id" {
-  value = aws_instance.my_first_cloud_ec2.id
-} 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-output "ec2_id" {
-  value = aws_instance.my_first_cloud_ec2.ipv4_address
-}
-#testing the output block.
-#Testing the github actions.
-#testing the github actions.
+      - name: Initialize Terraform
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Apply Changes
+        run: terraform apply -auto-approve
