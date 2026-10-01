@@ -1,0 +1,9 @@
+# Ignore Terraform provider binaries
+.terraform/
+
+# Ignore local state files (contain sensitive data)
+*.tfstate
+*.tfstate.*
+
+# Ignore lock files if needed, or variable secrets
+*.tfvars

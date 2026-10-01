@@ -1,0 +1,49 @@
+name: Terraform Deployment Workflow
+
+on:
+push:
+schedule:
+  - cron: '0 9 * * *'  # Run daily at midnight
+branches: main
+paths: 'main.tf'
+
+
+jobs:
+
+build-and-deploy:
+
+runs-on: ubuntu-latest
+# Define an environment for security and tracking
+environment: production
+
+
+steps:
+  - name: Checkout Code
+    uses: actions/checkout@v4
+
+  - name: Setup Terraform
+    uses: hashicorp/setup-terraform@v3
+    with:
+      terraform_version: 1.5.0
+
+  - name: Configure AWS Credentials
+    uses: aws-actions/configure-aws-credentials@v4
+    with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+
+#this will initialize
+  - name: Initialize Terraform
+    run: terraform init
+
+#these are the changes done
+  - name: changes
+    run: terraform plan
+
+
+#These are the changes applied. 
+  - name: Implementation
+    run: terraform apply
+
