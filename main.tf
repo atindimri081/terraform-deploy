@@ -35,3 +35,4 @@ output "ec2_id" {
 }
 #testing the output block.
 #Testing the github actions.
+#testing the github actions.
