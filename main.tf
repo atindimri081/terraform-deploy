@@ -7,7 +7,7 @@ on:
     paths:
       - 'main.tf'
   schedule:
-    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC as a safety sync
+    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC as a safety syncd
 
 jobs:
   build-and-deploy:
