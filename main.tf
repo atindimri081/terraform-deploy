@@ -1,42 +1,30 @@
-name: Terraform Deployment Workflow
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "5.0.0"
+    }
+  }
+}
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'main.tf'
-  schedule:
-    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC as a safety sync
+provider "aws" {
+  region = "us-east-1"
+}
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    environment: production
+resource "aws_instance" "web_server" {
+  ami           = "ami-0b245cc5f82576748"
+  instance_type = "t3.micro"
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+  tags = {
+    Name = "CI-CD-Deployed-Server"
+    Owner = "Atin"
+  }
+}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.0
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Initialize Terraform
-        run: terraform init
-
-      - name: Terraform Plan
-        run: terraform plan
-
-      - name: Apply Changes
-        run: terraform apply -auto-approve
-
-        #Testing the deploy file.
+#some print values
+output "instance_id" {
+  value = aws_instance.web_server.id
+}
+output "instance_public_ip" {
+  value = aws_instance.web_server.public_ip
+}
