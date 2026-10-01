@@ -34,3 +34,4 @@ output "ec2_id" {
   value = aws_instance.my_first_cloud_ec2.ipv4_address
 }
 #testing the output block.
+#Testing the github actions.
