@@ -9,7 +9,7 @@ terraform {
 
   # 🪣 Remote State Backend
   backend "s3" {
-    bucket = "Deploy_instance" # ⚠️ Put your exact created bucket name here
+    bucket = "atin-tf-state-bucket-2026" # ⚠️ Put your exact created bucket name here
     key    = "ec2/terraform.tfstate"  # File path inside the S3 bucket
     region = "us-east-1"
   }
