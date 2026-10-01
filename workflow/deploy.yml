@@ -1,11 +1,13 @@
 name: Terraform Deployment Workflow
 
 on:
-push:
-schedule:
-  - cron: '0 9 * * *'  # Run daily at midnight
-branches: main
-paths: 'main.tf'
+  push:
+    branches:
+      - main
+    paths:
+      - 'main.tf'
+  schedule:
+    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC as a safety sync
 
 
 jobs:
@@ -45,5 +47,5 @@ steps:
 
 #These are the changes applied. 
   - name: Implementation
-    run: terraform apply
+    run: terraform apply -auto-approve
 
